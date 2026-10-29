@@ -1,1 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync Network — Grow Your Discord Server With Real Members</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans, Outfit, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        display: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brandBlue: '#2563eb',
+                        brandOrange: '#f97316',
+                        brandRed: '#ef4444',
+                        slateDark: '#0f172a',
+                        slateMuted: '#475569'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Subtle, Warm Human-Crafted Ambient Mesh Background (Blue, Orange, Red) */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 15% 10%, rgba(249, 115, 22, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 12%, rgba(37, 99, 235, 0.09) 0%, transparent 45%),
+                radial-gradient(circle at 50% 85%, rgba(239, 68, 68, 0.06) 0%, transparent 45%);
+        }
+
+        /* Subtle Architectural Dot Grid */
+        .architectural-grid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.4;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
+        }
+
+        /* Clean SaaS Surface Card */
+        .saas-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 
+                0 1px 3px rgba(15, 23, 42, 0.03),
+                0 10px 24px -6px rgba(15, 23, 42, 0.05);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .saas-card-interactive:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            box-shadow: 
+                0 4px 8px rgba(15, 23, 42, 0.04),
+                0 20px 32px -8px rgba(15, 23, 42, 0.08);
+        }
+
+        /* Heading Typography */
+        .heading-tight {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.03em;
+        }
+
+        /* Brand Gradient Text (Royal Blue to Warm Orange & Red Accent) */
+        .text-brand-gradient {
+            background: linear-gradient(100deg, #2563eb 0%, #ea580c 60%, #ef4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Discord Bot Command Pill */
+        .cmd-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #1d4ed8;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+        }
+
+        .cmd-badge:hover {
+            background: #dbeafe;
+            border-color: #93c5fd;
+            color: #1e40af;
+        }
+
+        /* Primary Button (Royal Blue with subtle Orange/Red warmth) */
+        .btn-primary {
+            background: #2563eb;
+            color: #ffffff;
+            border: 1px solid #1d4ed8;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.18s ease;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Warm Orange Accent Button */
+        .btn-orange {
+            background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(249, 115, 22, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: all 0.18s ease;
+        }
+
+        .btn-orange:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -4px rgba(239, 68, 68, 0.35);
+        }
+
+        /* Secondary Clean Slate Button */
+        .btn-secondary {
+            background: #ffffff;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+            transition: all 0.18s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+            transform: translateY(-1px);
+        }
+
+        /* Multi-Page View Transitions */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-view {
+            display: none;
+            animation: fadeSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .page-view.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-600 selection:text-white">
+
+    <!-- Subtle Ambient Mesh & Architectural Grid -->
+    <div class="ambient-bg"></div>
+    <div class="architectural-grid"></div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ==========================================
+         TOP NAVIGATION BAR
+         ========================================== -->
+    <header class="sticky top-0 z-40 w-full bg-white/85 backdrop-blur-md border-b border-slate-200/90">
+        <div class="max-w-[1160px] mx-auto px-6 h-16 sm:h-[72px] flex items-center justify-between gap-4">
+            
+            <!-- Brand Identity -->
+            <button onclick="navigateTo('home')" class="flex items-center gap-3 text-left group focus:outline-none">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-orange-500 to-red-500 p-[2px] shadow-sm">
+                    <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <span class="heading-tight font-bold text-lg text-slate-900 tracking-tight block leading-none">
+                        Sync Network
+                    </span>
+                    <span class="text-[11px] font-medium text-slate-500 block mt-0.5">
+                        Community Growth Platform
+                    </span>
+                </div>
+            </button>
+
+            <!-- Primary Navigation Tabs (Desktop) -->
+            <nav class="hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/70">
+                <button onclick="navigateTo('home')" data-nav="home" class="nav-tab px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-all text-slate-900 bg-white shadow-sm">
+                    Home
+                </button>
+                <button onclick="navigateTo('how-it-works')" data-nav="how-it-works" class="nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+                    How It Works
+                </button>
+                <button onclick="navigateTo('features')" data-nav="features" class="nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+                    Features
+                </button>
+                <button onclick="navigateTo('stats')" data-nav="stats" class="nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+                    Stats
+                </button>
+                <button onclick="navigateTo('get-started')" data-nav="get-started" class="nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
+                    Get Started
+                </button>
+                <button onclick="navigateTo('credits')" data-nav="credits" class="nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-orange-600 hover:text-orange-700">
+                    Credits
+                </button>
+            </nav>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-2.5">
+                <button id="view-mode-btn" onclick="toggleAllPagesMode()" title="Switch between Multi-Page Tabs and Full Scroll Page" class="hidden lg:inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 text-xs font-semibold transition">
+                    <span id="view-mode-dot" class="w-2 h-2 rounded-full bg-blue-600"></span>
+                    <span id="view-mode-label">View: Multi-Page</span>
+                </button>
+
+                <a href="https://discord.gg/TkKKCwnRSR" target="_blank" rel="noopener noreferrer" class="btn-primary px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5">
+                    <span>Join Discord</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+
+                <!-- Mobile Hamburger -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white px-6 py-4 space-y-1 shadow-lg">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-900 hover:bg-slate-100">Home</button>
+            <button onclick="navigateTo('how-it-works'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100">How It Works</button>
+            <button onclick="navigateTo('features'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100">Features</button>
+            <button onclick="navigateTo('stats'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100">Stats</button>
+            <button onclick="navigateTo('get-started'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100">Get Started</button>
+            <button onclick="navigateTo('credits'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold text-orange-600 bg-orange-50">Credits (ZOOSE &amp; EISUKEPLAYZ)</button>
+            <div class="pt-3 mt-2 border-t border-slate-100 flex items-center justify-between">
+                <button onclick="toggleAllPagesMode(); toggleMobileMenu()" class="text-xs font-semibold text-blue-600">
+                    Switch View Mode
+                </button>
+                <a href="https://discord.gg/TkKKCwnRSR" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-slate-900 underline">
+                    Discord Server ↗
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         MAIN CONTENT CONTAINER (Centered 1160px)
+         ========================================== -->
+    <main class="relative z-10 max-w-[1160px] mx-auto px-6 py-10 sm:py-16">
+
+        <!-- =====================================================
+             PAGE 1: HOME (Hero + Section Overview Directory)
+             ===================================================== -->
+        <section id="page-home" class="page-view active">
+            <div class="text-center max-w-3xl mx-auto pt-2 pb-14">
+                
+                <!-- Free Forever Badge (Warm Orange & Red Pill) -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200/80 text-orange-700 text-xs font-bold tracking-wide uppercase mb-7 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                    <span>Free Forever</span>
+                </div>
+
+                <!-- Clean Emblem Icon -->
+                <div class="w-20 h-20 mx-auto mb-7 rounded-2xl bg-white border border-slate-200 shadow-md flex items-center justify-center relative">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-tr from-blue-600 via-orange-500 to-red-500 flex items-center justify-center text-white shadow-inner">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Hero Headline -->
+                <h1 class="heading-tight font-extrabold text-4xl sm:text-6xl text-slate-900 leading-[1.08] mb-5">
+                    Grow Your Server<br>
+                    With <span class="text-brand-gradient">Real Members</span>
+                </h1>
+
+                <!-- Hero Subtitle -->
+                <p class="text-slate-600 text-base sm:text-lg max-w-xl mx-auto leading-relaxed mb-9">
+                    Sync Network brings real, active members to your Discord server. No bots, no fake accounts. Just run one command and watch your community grow.
+                </p>
+
+                <!-- Hero CTA Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-3.5">
+                    <button onclick="navigateTo('how-it-works')" class="btn-primary px-7 py-3.5 rounded-xl font-semibold text-sm sm:text-base inline-flex items-center gap-2">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                        </svg>
+                        <span>Get Started</span>
+                    </button>
+
+                    <a href="https://discord.gg/TkKKCwnRSR" target="_blank" rel="noopener noreferrer" class="btn-secondary px-7 py-3.5 rounded-xl font-semibold text-sm sm:text-base inline-flex items-center gap-2">
+                        <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                        </svg>
+                        <span>Discord Server</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Aligned 4-Column Quick Overview Bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-4">
+                <div onclick="navigateTo('how-it-works')" class="saas-card saas-card-interactive p-6 cursor-pointer flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm mb-4 border border-blue-100">
+                            01
+                        </div>
+                        <h3 class="heading-tight font-bold text-slate-900 text-lg mb-1.5">How It Works</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Three simple commands to authorize and start receiving members.</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-xs font-semibold text-blue-600 flex items-center justify-between">
+                        <span>View 3-Step Guide</span>
+                        <span>→</span>
+                    </div>
+                </div>
+
+                <div onclick="navigateTo('features')" class="saas-card saas-card-interactive p-6 cursor-pointer flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-9 h-9 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-sm mb-4 border border-orange-100">
+                            02
+                        </div>
+                        <h3 class="heading-tight font-bold text-slate-900 text-lg mb-1.5">Why Sync Network</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Lightning fast delivery, official OAuth2 security, and 100% free.</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-xs font-semibold text-orange-600 flex items-center justify-between">
+                        <span>Explore 6 Features</span>
+                        <span>→</span>
+                    </div>
+                </div>
+
+                <div onclick="navigateTo('stats')" class="saas-card saas-card-interactive p-6 cursor-pointer flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold text-sm mb-4 border border-red-100">
+                            03
+                        </div>
+                        <h3 class="heading-tight font-bold text-slate-900 text-lg mb-1.5">Platform Metrics</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">24/7 uptime, under 5-second order processing, and real community scale.</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-slate-100 text-xs font-semibold text-red-600 flex items-center justify-between">
+                        <span>See Live Numbers</span>
+                        <span>→</span>
+                    </div>
+                </div>
+
+                <div onclick="navigateTo('credits')" class="saas-card saas-card-interactive p-6 cursor-pointer flex flex-col justify-between h-full border-orange-200/80 bg-gradient-to-b from-orange-50/40 to-white">
+                    <div>
+                        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-sm">
+                            ★
+                        </div>
+                        <h3 class="heading-tight font-bold text-slate-900 text-lg mb-1.5">Team &amp; Credits</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Meet Owner <strong class="text-slate-900">ZOOSE</strong> &amp; Developer <strong class="text-slate-900">EISUKEPLAYZ</strong>.</p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-orange-100 text-xs font-semibold text-orange-600 flex items-center justify-between">
+                        <span>View Leadership</span>
+                        <span>→</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PAGE 2: HOW IT WORKS (3 Step Cards + Interactive Bot Preview)
+             ===================================================== -->
+        <section id="page-how-it-works" class="page-view py-4">
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-orange-600 block mb-2">
+                    Getting Started
+                </span>
+                <h2 class="heading-tight font-extrabold text-3xl sm:text-5xl text-slate-900 mb-3">
+                    How It <span class="text-brand-gradient">Works</span>
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Get free members for your server in three simple steps.
+                </p>
+            </div>
+
+            <!-- Strict 3-Column Equal Height Step Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mb-12">
+                
+                <!-- Step 1 -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-10 h-10 rounded-xl bg-blue-600 text-white font-display font-bold text-base flex items-center justify-center shadow-sm mb-6">
+                            1
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-3 flex flex-wrap items-center gap-2">
+                            <span>Type</span>
+                            <button onclick="copyText('!authlink')" class="cmd-badge" title="Click to copy">
+                                !authlink
+                            </button>
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Head to the <strong class="text-slate-900 font-semibold">#auth-link</strong> channel in our Discord server and type the command. The bot will send you an authorization link.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span class="font-medium">Channel: #auth-link</span>
+                        <button onclick="runSimCommand('!authlink')" class="font-semibold text-blue-600 hover:text-blue-700">
+                            Test command ↓
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-10 h-10 rounded-xl bg-orange-500 text-white font-display font-bold text-base flex items-center justify-center shadow-sm mb-6">
+                            2
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-3">
+                            Authorize Your Account
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Click the link and authorize your Discord account. You'll get an authorization key — copy it and paste it back with
+                            <button onclick="copyText('!auth <key>')" class="cmd-badge mt-1" title="Click to copy">
+                                !auth &lt;key&gt;
+                            </button>.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span class="font-medium">Discord OAuth2</span>
+                        <button onclick="runSimCommand('!auth SN-8492-KEY')" class="font-semibold text-orange-600 hover:text-orange-700">
+                            Test command ↓
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-10 h-10 rounded-xl bg-red-500 text-white font-display font-bold text-base flex items-center justify-center shadow-sm mb-6">
+                            3
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-3 flex flex-wrap items-center gap-2">
+                            <span>Run</span>
+                            <button onclick="copyText('!order <server_id>')" class="cmd-badge" title="Click to copy">
+                                !order &lt;server_id&gt;
+                            </button>
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Go to the <strong class="text-slate-900 font-semibold">#order</strong> channel and run the order command with your server ID. Sit back and watch members join.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span class="font-medium">Channel: #order</span>
+                        <button onclick="runSimCommand('!order 109482716509')" class="font-semibold text-red-600 hover:text-red-700">
+                            Test command ↓
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Discord Command Preview Widget -->
+            <div class="saas-card overflow-hidden border border-slate-200">
+                <div class="bg-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-orange-400"></span>
+                            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                        </div>
+                        <span class="text-xs sm:text-sm font-semibold text-slate-200">
+                            Interactive Command Preview — Sync Network Bot
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="resetSimulator()" class="text-xs font-medium text-slate-300 hover:text-white px-2.5 py-1 rounded-lg bg-white/10">
+                            Reset Preview
+                        </button>
+                        <a href="https://discord.gg/TkKKCwnRSR" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-lg transition">
+                            Open Real Discord ↗
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12">
+                    <!-- Left Controls -->
+                    <div class="lg:col-span-4 bg-slate-50 border-b lg:border-b-0 lg:border-r border-slate-200 p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+                                Try Commands
+                            </div>
+                            <div class="space-y-2">
+                                <button onclick="runSimCommand('!authlink')" class="w-full text-left px-3.5 py-2.5 rounded-xl bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-blue-300 transition flex items-center justify-between text-xs font-mono font-semibold text-slate-800">
+                                    <span>1. !authlink</span>
+                                    <span class="text-blue-600 font-sans">Run →</span>
+                                </button>
+                                <button onclick="runSimCommand('!auth SN-8492-KEY')" class="w-full text-left px-3.5 py-2.5 rounded-xl bg-white hover:bg-orange-50/60 border border-slate-200 hover:border-orange-300 transition flex items-center justify-between text-xs font-mono font-semibold text-slate-800">
+                                    <span>2. !auth &lt;key&gt;</span>
+                                    <span class="text-orange-600 font-sans">Run →</span>
+                                </button>
+                                <button onclick="runSimCommand('!order 109482716509')" class="w-full text-left px-3.5 py-2.5 rounded-xl bg-white hover:bg-red-50/60 border border-slate-200 hover:border-red-300 transition flex items-center justify-between text-xs font-mono font-semibold text-slate-800">
+                                    <span>3. !order &lt;server_id&gt;</span>
+                                    <span class="text-red-600 font-sans">Run →</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <div class="text-[11px] font-semibold uppercase text-slate-400">Simulated Server</div>
+                                <div class="text-xs font-medium text-slate-600 mt-0.5">Active Members</div>
+                            </div>
+                            <div id="sim-member-count" class="heading-tight font-extrabold text-2xl text-blue-600">
+                                150
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Message Stream -->
+                    <div class="lg:col-span-8 p-6 bg-white flex flex-col justify-between min-h-[320px]">
+                        <div id="discord-chat-log" class="space-y-4 max-h-[260px] overflow-y-auto pr-2">
+                            <div class="flex items-start gap-3.5">
+                                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                                    SN
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-slate-900 text-sm">Sync Network Bot</span>
+                                        <span class="px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded">BOT</span>
+                                        <span class="text-xs text-slate-400">Ready</span>
+                                    </div>
+                                    <p class="text-sm text-slate-600 mt-1 leading-relaxed">
+                                        Select any step on the left or type <button onclick="runSimCommand('!authlink')" class="cmd-badge">!authlink</button> below to preview how the bot responds inside our Discord server.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form onsubmit="handleSimFormSubmit(event)" class="mt-5 pt-4 border-t border-slate-100 flex items-center gap-2.5">
+                            <input id="sim-chat-input" type="text" placeholder="Type !authlink, !auth <key>, or !order <server_id>..." class="flex-1 bg-slate-50 text-slate-900 placeholder-slate-400 text-sm font-mono rounded-xl px-4 py-2.5 border border-slate-200 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            <button type="submit" class="btn-primary px-5 py-2.5 rounded-xl font-semibold text-sm shrink-0">
+                                Send
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PAGE 3: FEATURES (Why Sync Network — 6-Card 3x2 Grid)
+             ===================================================== -->
+        <section id="page-features" class="page-view py-4">
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-blue-600 block mb-2">
+                    Why Choose Us
+                </span>
+                <h2 class="heading-tight font-extrabold text-3xl sm:text-5xl text-slate-900 mb-3">
+                    Why <span class="text-brand-gradient">Sync Network</span>
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Everything you need to grow your community — completely free.
+                </p>
+            </div>
+
+            <!-- Strictly Aligned 3x2 Equal-Height Feature Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+                
+                <!-- Feature 1: Lightning Fast (Orange Accent) -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-11 h-11 rounded-xl bg-orange-50 border border-orange-200/70 text-orange-600 flex items-center justify-center mb-5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-2">
+                            Lightning Fast
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Members are added within seconds. No waiting, no delays, no queues longer than necessary.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-orange-600">
+                        <span>Instant Dispatch</span>
+                        <span>&lt; 5 Seconds</span>
+                    </div>
+                </div>
+
+                <!-- Feature 2: 100% Free (Blue Accent) -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-200/70 text-blue-600 flex items-center justify-center mb-5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                            </svg>
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-2">
+                            100% Free
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            No payments, no subscriptions, no hidden fees. Our service is free and always will be.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-600">
+                        <span>Zero Hidden Costs</span>
+                        <span>Free Forever</span>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Real Members (Red Accent) -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-11 h-11 rounded-xl bg-red-50 border border-red-200/70 text-red-600 flex items-center justify-center mb-5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-2">
+                            Real Members
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Real Discord users from our community. No bots, no fake accounts, no inflated numbers.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-red-600">
+                        <span>Authentic Users</span>
+                        <span>100% Verified</span>
+                    </div>
+                </div>
+
+                <!-- Feature 4: Secure OAuth (Blue Accent) -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-200/70 text-blue-600 flex items-center justify-center mb-5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-2">
+                            Secure OAuth
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            We use Discord's official OAuth2 system. Your account stays safe and you can revoke access anytime.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-600">
+                        <span>Security Standard</span>
+                        <span>Official OAuth2</span>
+                    </div>
+                </div>
+
+                <!-- Feature 5: Easy To Use (Orange Accent) -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-11 h-11 rounded-xl bg-orange-50 border border-orange-200/70 text-orange-600 flex items-center justify-center mb-5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-2">
+                            Easy To Use
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Three commands. That's all you need. Simple enough for anyone to use immediately.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-orange-600">
+                        <span>Workflow</span>
+                        <span>3 Simple Commands</span>
+                    </div>
+                </div>
+
+                <!-- Feature 6: Instant Orders (Red Accent) -->
+                <div class="saas-card saas-card-interactive p-7 flex flex-col justify-between h-full">
+                    <div>
+                        <div class="w-11 h-11 rounded-xl bg-red-50 border border-red-200/70 text-red-600 flex items-center justify-center mb-5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900 mb-2">
+                            Instant Orders
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Our smart queue system processes orders in the order they're placed. No delays.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-red-600">
+                        <span>Smart Queue</span>
+                        <span>Zero Bottlenecks</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PAGE 4: STATS (Growing Community — 4-Column Metric Grid)
+             ===================================================== -->
+        <section id="page-stats" class="page-view py-4">
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-red-600 block mb-2">
+                    By The Numbers
+                </span>
+                <h2 class="heading-tight font-extrabold text-3xl sm:text-5xl text-slate-900 mb-3">
+                    Growing <span class="text-brand-gradient">Community</span>
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Sync Network is trusted by server owners around the world.
+                </p>
+            </div>
+
+            <!-- 4 Core Metric Cards (Aligned 4-Column Grid) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                <div class="saas-card saas-card-interactive p-8 text-center flex flex-col justify-center">
+                    <div class="heading-tight font-extrabold text-4xl sm:text-5xl text-orange-500 mb-2">
+                        100%
+                    </div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-slate-500">
+                        Free
+                    </div>
+                </div>
+
+                <div class="saas-card saas-card-interactive p-8 text-center flex flex-col justify-center">
+                    <div class="heading-tight font-extrabold text-4xl sm:text-5xl text-blue-600 mb-2">
+                        24/7
+                    </div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-slate-500">
+                        Online
+                    </div>
+                </div>
+
+                <div class="saas-card saas-card-interactive p-8 text-center flex flex-col justify-center">
+                    <div class="heading-tight font-extrabold text-4xl sm:text-5xl text-red-500 mb-2">
+                        &lt;5s
+                    </div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-slate-500">
+                        Order Time
+                    </div>
+                </div>
+
+                <div class="saas-card saas-card-interactive p-8 text-center flex flex-col justify-center">
+                    <div class="heading-tight font-extrabold text-4xl sm:text-5xl text-orange-500 mb-2">
+                        ∞
+                    </div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-slate-500">
+                        Possibilities
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clean Activity & Reliability Breakdown -->
+            <div class="saas-card p-7 sm:p-8">
+                <div class="flex flex-wrap items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-100">
+                    <div>
+                        <h3 class="heading-tight font-bold text-xl text-slate-900">Recent Community Orders</h3>
+                        <p class="text-sm text-slate-500 mt-0.5">Live snapshot of recent <code class="font-mono text-blue-600 font-semibold">!order</code> deliveries across Discord.</p>
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                        <span>Orders Processed Today: <strong id="live-order-counter">14,892</strong></span>
+                    </div>
+                </div>
+
+                <div id="live-telemetry-feed" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PAGE 5: GET STARTED (Ready To Grow CTA + Estimator)
+             ===================================================== -->
+        <section id="page-get-started" class="page-view py-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                
+                <!-- Left Column: Growth Estimator -->
+                <div class="lg:col-span-6 saas-card p-8 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-blue-600 block mb-2">
+                            Growth Planner
+                        </span>
+                        <h3 class="heading-tight font-bold text-2xl sm:text-3xl text-slate-900 mb-3">
+                            Estimate Your Server Growth
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                            Use the slider below to see how many real Discord members your community can gain each month with Sync Network.
+                        </p>
+
+                        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/80 mb-6">
+                            <div class="flex items-center justify-between text-xs font-bold uppercase text-slate-500 mb-3">
+                                <span>Weekly Orders Run</span>
+                                <span class="text-blue-600 text-sm"><span id="calc-orders-val">15</span> orders / week</span>
+                            </div>
+                            <input id="calc-slider" type="range" min="1" max="50" value="15" oninput="updateGrowthCalculator(this.value)" class="w-full accent-blue-600 cursor-pointer h-2 bg-slate-200 rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-blue-50/60 border border-blue-100">
+                            <div class="text-xs font-semibold text-slate-500">Est. Monthly Members</div>
+                            <div id="calc-monthly-out" class="heading-tight font-extrabold text-2xl sm:text-3xl text-blue-600 mt-1">+1,800</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-orange-50/60 border border-orange-100">
+                            <div class="text-xs font-semibold text-slate-500">Subscription Fee</div>
+                            <div class="heading-tight font-extrabold text-2xl sm:text-3xl text-orange-600 mt-1">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Ready To Grow CTA Card -->
+                <div class="lg:col-span-6 saas-card p-8 sm:p-10 flex flex-col justify-center text-center bg-gradient-to-br from-white via-orange-50/30 to-blue-50/40 border-slate-200">
+                    <div class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 text-white flex items-center justify-center shadow-md">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h2 class="heading-tight font-extrabold text-3xl sm:text-4xl text-slate-900 mb-4">
+                        Ready To Grow?
+                    </h2>
+                    <p class="text-slate-600 text-base max-w-md mx-auto leading-relaxed mb-8">
+                        Join our Discord server and run
+                        <button onclick="copyText('!authlink')" class="cmd-badge mx-1">!authlink</button>
+                        to get started. It takes less than a minute.
+                    </p>
+                    <div>
+                        <a href="https://discord.gg/TkKKCwnRSR" target="_blank" rel="noopener noreferrer" class="btn-orange px-8 py-4 rounded-xl font-semibold text-base inline-flex items-center justify-center gap-2.5">
+                            <span>Join Discord Server</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =====================================================
+             PAGE 6: CREDITS PAGE (ZOOSE & EISUKEPLAYZ)
+             ===================================================== -->
+        <section id="page-credits" class="page-view py-4">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-xs font-bold uppercase tracking-wider mb-3">
+                    Leadership &amp; Engineering
+                </span>
+                <h2 class="heading-tight font-extrabold text-3xl sm:text-5xl text-slate-900 mb-3">
+                    Built By <span class="text-brand-gradient">Real Creators</span>
+                </h2>
+                <p class="text-slate-600 text-base">
+                    Sync Network is owned, engineered, and maintained with care for Discord communities worldwide.
+                </p>
+            </div>
+
+            <!-- 2 Equal-Height Executive Profile Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+
+                <!-- WEBSITE OWNER : ZOOSE -->
+                <div class="saas-card saas-card-interactive p-8 sm:p-9 flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-orange-500 to-red-500"></div>
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-6">
+                            <span class="px-3 py-1 rounded-lg bg-orange-50 border border-orange-200 text-orange-700 text-xs font-bold uppercase tracking-wider">
+                                Website Owner
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                                <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                                Founder &amp; Lead Visionary
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 text-white font-display font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0">
+                                Z
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold uppercase tracking-wider text-slate-400">
+                                    WEBSITE OWNER
+                                </div>
+                                <h3 class="heading-tight font-extrabold text-3xl sm:text-4xl text-slate-900 flex items-center gap-2">
+                                    <span>ZOOSE</span>
+                                    <svg class="w-6 h-6 text-orange-500 shrink-0" viewBox="0 0 20 20" fill="currentColor" title="Verified Owner">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+                            Founder and Owner of <strong class="text-slate-900">Sync Network</strong>. Dedicated to making organic Discord community growth accessible, fast, and 100% free for every server owner.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-3 mb-6">
+                            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                                <div class="text-[11px] font-bold uppercase text-slate-400">Role</div>
+                                <div class="text-sm font-bold text-slate-900 mt-0.5">Website Owner</div>
+                            </div>
+                            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                                <div class="text-[11px] font-bold uppercase text-slate-400">Platform Pledge</div>
+                                <div class="text-sm font-bold text-orange-600 mt-0.5">100% Free Forever</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-400">WEBSITE OWNER : ZOOSE</span>
+                        <button onclick="copyText('WEBSITE OWNER : ZOOSE')" class="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
+                            Copy Credit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- WEBSITE DEVELOPER : EISUKEPLAYZ -->
+                <div class="saas-card saas-card-interactive p-8 sm:p-9 flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-blue-600 to-orange-500"></div>
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-6">
+                            <span class="px-3 py-1 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-wider">
+                                Website Developer
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                                <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                                Lead Product Engineer
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 text-white font-display font-extrabold text-2xl flex items-center justify-center shadow-md shrink-0">
+                                E
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold uppercase tracking-wider text-slate-400">
+                                    WEBSITE DEVELOPER
+                                </div>
+                                <h3 class="heading-tight font-extrabold text-3xl sm:text-4xl text-slate-900 flex items-center gap-2">
+                                    <span>EISUKEPLAYZ</span>
+                                    <svg class="w-6 h-6 text-blue-600 shrink-0" viewBox="0 0 20 20" fill="currentColor" title="Verified Developer">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+                            Lead Website Developer and UI Architect of <strong class="text-slate-900">Sync Network</strong>. Designed and built the web application, interactive command simulator, and responsive interface.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-3 mb-6">
+                            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                                <div class="text-[11px] font-bold uppercase text-slate-400">Role</div>
+                                <div class="text-sm font-bold text-slate-900 mt-0.5">Website Developer</div>
+                            </div>
+                            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                                <div class="text-[11px] font-bold uppercase text-slate-400">Focus</div>
+                                <div class="text-sm font-bold text-blue-600 mt-0.5">Full-Stack &amp; UI Design</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-400">WEBSITE DEVELOPER : EISUKEPLAYZ</span>
+                        <button onclick="copyText('WEBSITE DEVELOPER : EISUKEPLAYZ')" class="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
+                            Copy Credit
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         GLOBAL FOOTER
+         ========================================== -->
+    <footer class="relative z-10 border-t border-slate-200/90 bg-white py-10 mt-12">
+        <div class="max-w-[1160px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 via-orange-500 to-red-500 flex items-center justify-center text-white font-bold text-sm">
+                    S
+                </div>
+                <span class="text-sm text-slate-600 font-medium">
+                    Sync Network © 2026 •
+                    <a href="https://discord.gg/TkKKCwnRSR" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-semibold">Discord Server</a>
+                </span>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-600 bg-slate-50 border border-slate-200/80 px-4 py-2 rounded-xl">
+                <span>WEBSITE OWNER : <strong class="text-orange-600">ZOOSE</strong></span>
+                <span class="text-slate-300">|</span>
+                <span>WEBSITE DEVELOPER : <strong class="text-blue-600">EISUKEPLAYZ</strong></span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         APPLICATION SCRIPTS
+         ========================================== -->
+    <script>
+        /* -----------------------------------------------------------
+           1. MULTI-PAGE ROUTER & FULL SCROLL MODE TOGGLE
+        ----------------------------------------------------------- */
+        let allPagesMode = false;
+        const pageOrder = ['home', 'how-it-works', 'features', 'stats', 'get-started', 'credits'];
+
+        function navigateTo(pageId) {
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                const target = btn.getAttribute('data-nav');
+                if (target === pageId) {
+                    btn.className = 'nav-tab px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-all text-slate-900 bg-white shadow-sm';
+                } else if (target === 'credits') {
+                    btn.className = 'nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-orange-600 hover:text-orange-700';
+                } else {
+                    btn.className = 'nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900';
+                }
+            });
+
+            if (allPagesMode) {
+                const targetEl = document.getElementById(`page-${pageId}`);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
+
+            pageOrder.forEach(id => {
+                const section = document.getElementById(`page-${id}`);
+                if (!section) return;
+                if (id === pageId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleAllPagesMode() {
+            allPagesMode = !allPagesMode;
+            const label = document.getElementById('view-mode-label');
+            const dot = document.getElementById('view-mode-dot');
+
+            if (allPagesMode) {
+                pageOrder.forEach(id => {
+                    const sec = document.getElementById(`page-${id}`);
+                    if (sec) sec.classList.add('active');
+                });
+                if (label) label.textContent = 'View: Full Scroll';
+                if (dot) dot.className = 'w-2 h-2 rounded-full bg-orange-500';
+                showToast('Switched to Full Scroll Page View');
+            } else {
+                if (label) label.textContent = 'View: Multi-Page';
+                if (dot) dot.className = 'w-2 h-2 rounded-full bg-blue-600';
+                navigateTo('home');
+                showToast('Switched to Multi-Page Tab View');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        /* -----------------------------------------------------------
+           2. CLIPBOARD & TOAST NOTIFICATIONS
+        ----------------------------------------------------------- */
+        function copyText(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast(`Copied "${text}" to clipboard`);
+            } catch (err) {
+                showToast(`Command: ${text}`);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow-lg transition-all duration-300';
+            toast.innerHTML = `
+                <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(6px)';
+                setTimeout(() => toast.remove(), 250);
+            }, 2400);
+        }
+
+        /* -----------------------------------------------------------
+           3. INTERACTIVE DISCORD COMMAND PREVIEW
+        ----------------------------------------------------------- */
+        let simMemberTotal = 150;
+
+        function handleSimFormSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('sim-chat-input');
+            const cmd = input.value.trim();
+            if (!cmd) return;
+            input.value = '';
+            runSimCommand(cmd);
+        }
+
+        function runSimCommand(cmd) {
+            const cleanCmd = cmd.trim();
+            appendDiscordMessage('user', cleanCmd);
+
+            setTimeout(() => {
+                if (cleanCmd.toLowerCase() === '!authlink') {
+                    appendDiscordMessage('bot', `
+                        <div class="p-3.5 rounded-xl bg-blue-50/80 border border-blue-200 mt-1 space-y-2">
+                            <div class="text-xs font-bold text-blue-700">Step 1 Complete: Authorization Link Sent</div>
+                            <p class="text-xs text-slate-600">Click the OAuth2 link to authorize your Discord account. Your sample key is <code class="px-1.5 py-0.5 rounded bg-white border border-blue-200 text-blue-700 font-mono">SN-8492-KEY</code>.</p>
+                            <button onclick="runSimCommand('!auth SN-8492-KEY')" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition">
+                                Run Step 2: !auth SN-8492-KEY →
+                            </button>
+                        </div>
+                    `);
+                } else if (cleanCmd.toLowerCase().startsWith('!auth')) {
+                    appendDiscordMessage('bot', `
+                        <div class="p-3.5 rounded-xl bg-orange-50/80 border border-orange-200 mt-1 space-y-2">
+                            <div class="text-xs font-bold text-orange-700">Step 2 Complete: Account Authorized</div>
+                            <p class="text-xs text-slate-600">Your Discord account is verified via OAuth2. Now run <code class="font-mono font-semibold text-orange-700">!order &lt;server_id&gt;</code> in <strong>#order</strong>.</p>
+                            <button onclick="runSimCommand('!order 109482716509')" class="px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold transition">
+                                Run Step 3: !order 109482716509 →
+                            </button>
+                        </div>
+                    `);
+                } else if (cleanCmd.toLowerCase().startsWith('!order')) {
+                    const serverId = cleanCmd.split(' ')[1] || '109482716509';
+                    const addedMembers = 45;
+                    simMemberTotal += addedMembers;
+                    const counterEl = document.getElementById('sim-member-count');
+                    if (counterEl) counterEl.textContent = simMemberTotal;
+
+                    appendDiscordMessage('bot', `
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 mt-1 space-y-1.5">
+                            <div class="text-xs font-bold text-slate-900">Order Processed in 1.6s</div>
+                            <p class="text-xs text-slate-600">Successfully delivering <strong class="text-blue-600">+${addedMembers} Real Members</strong> to Server ID <code class="font-mono text-slate-800">${serverId}</code>.</p>
+                        </div>
+                    `);
+                    showToast(`+${addedMembers} real members dispatched!`);
+                } else {
+                    appendDiscordMessage('bot', `Unrecognized command. Try <button onclick="runSimCommand('!authlink')" class="cmd-badge">!authlink</button>, <button onclick="runSimCommand('!auth SN-8492-KEY')" class="cmd-badge">!auth &lt;key&gt;</button>, or <button onclick="runSimCommand('!order 109482716509')" class="cmd-badge">!order &lt;server_id&gt;</button>.`);
+                }
+            }, 240);
+        }
+
+        function appendDiscordMessage(sender, htmlContent) {
+            const log = document.getElementById('discord-chat-log');
+            if (!log) return;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex items-start gap-3.5';
+
+            if (sender === 'user') {
+                wrapper.innerHTML = `
+                    <div class="w-9 h-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">YOU</div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-900 text-sm">You</span>
+                            <span class="text-xs text-slate-400">Just now</span>
+                        </div>
+                        <div class="text-sm font-mono font-semibold text-blue-600 mt-0.5">${htmlContent}</div>
+                    </div>
+                `;
+            } else {
+                wrapper.innerHTML = `
+                    <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">SN</div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-900 text-sm">Sync Network Bot</span>
+                            <span class="px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded">BOT</span>
+                            <span class="text-xs text-slate-400">Just now</span>
+                        </div>
+                        <div class="text-sm text-slate-600 mt-1">${htmlContent}</div>
+                    </div>
+                `;
+            }
+
+            log.appendChild(wrapper);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function resetSimulator() {
+            const log = document.getElementById('discord-chat-log');
+            if (!log) return;
+            log.innerHTML = '';
+            appendDiscordMessage('bot', 'Preview reset. Click <button onclick="runSimCommand(\'!authlink\')" class="cmd-badge">!authlink</button> to test Step 1.');
+        }
+
+        /* -----------------------------------------------------------
+           4. GROWTH ESTIMATOR & RECENT ORDERS FEED
+        ----------------------------------------------------------- */
+        function updateGrowthCalculator(val) {
+            document.getElementById('calc-orders-val').textContent = val;
+            const estMonthly = val * 120;
+            document.getElementById('calc-monthly-out').textContent = `+${estMonthly.toLocaleString()}`;
+        }
+
+        const sampleOrders = [
+            { id: '108294***812', members: '+50 Real Members', time: '1.4s' },
+            { id: '119402***309', members: '+45 Real Members', time: '2.1s' },
+            { id: '994810***774', members: '+60 Real Members', time: '1.7s' },
+            { id: '120491***118', members: '+40 Real Members', time: '1.1s' }
+        ];
+
+        function renderTelemetryFeed() {
+            const container = document.getElementById('live-telemetry-feed');
+            if (!container) return;
+            container.innerHTML = sampleOrders.map(item => `
+                <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                        <span class="font-mono text-slate-600">!order <strong class="text-slate-900">${item.id}</strong></span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-semibold text-slate-900">${item.members}</span>
+                        <span class="px-2 py-0.5 rounded-md bg-orange-50 text-orange-700 font-semibold border border-orange-200/60">${item.time}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.onload = function () {
+            renderTelemetryFeed();
+        };
+    </script>
+</body>
+</html>
